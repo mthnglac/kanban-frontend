@@ -62,14 +62,14 @@ export const deleteTask = createAsyncThunk(
 // Async thunk for updating a task
 export const updateTask = createAsyncThunk(
     "task/updateTask",
-    async ({ id, title, description, order }, { rejectWithValue }) => {
+    async ({ id, title, description, order, flowNodeId }, { rejectWithValue }) => {
       try {
         const response = await fetch(`${BACKEND_BASE_URL}/task/${id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ title, description, order }),
+          body: JSON.stringify({ title, description, order, flowNodeId }),
         });
         if (!response.ok) {
           return rejectWithValue("Failed to update task");

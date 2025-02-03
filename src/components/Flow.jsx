@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Droppable, DragDropContext } from "@hello-pangea/dnd";
+import { Droppable } from "@hello-pangea/dnd";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTasks, createTask, deleteTask, updateTask } from "../store/taskSlice";
+import { fetchTasks, createTask, deleteTask, updateTask, updateTasksLocally } from "../store/taskSlice";
 import Task from "./Task";
 import { updateFlow, deleteFlow } from "../store/flowSlice";
 import { FaPencilAlt } from "react-icons/fa";
@@ -76,7 +76,7 @@ const Flow = ({ flow }) => {
          })
       );
       setIsEditMode(false);
-       handleCloseMenu();
+      handleCloseMenu();
     };
 
     const handleDeleteFlow = async () => {
@@ -99,37 +99,6 @@ const Flow = ({ flow }) => {
           };
       }, [menuRef]);
 
-    const handleOnDragEnd = async (result) => {
-        if (!result.destination) return;
-        const { source, destination } = result;
-
-         const items = [...tasks].filter((task) => task.flowNodeId === flow.id);
-
-      // If the task has been moved to another column
-      if (source.droppableId !== destination.droppableId) {
-          console.log("Moved to another column");
-        }
-        // Reorder tasks within the same column
-       else {
-        const [reorderedItem] = items.splice(source.index, 1);
-        items.splice(destination.index, 0, reorderedItem);
-        
-         const updatedTasks = items.map((task, index) => ({...task, order: index}));
-
-          updatedTasks.forEach(async updatedTask => {
-              if(tasks.find((t) => t.id === updatedTask.id).order !== updatedTask.order) {
-                 dispatch(updateTask(updatedTask));
-                    dispatch(fetchTasks(flow.id));
-                  }
-            });
-        }
-    };
-
-      const handleKeyDown = (event) => {
-            if (event.key === 'Enter') {
-                handleSaveEdit();
-            }
-        };
     return (
         <div style={{ border: '1px solid #ccc', padding: '10px', margin: '10px', minWidth: '200px', backgroundColor: '#f0f0f0', borderRadius: '5px' }}>
         {!(loading || error) && (
@@ -142,7 +111,6 @@ const Flow = ({ flow }) => {
                         type="text"
                         value={editedTitle}
                         onChange={(e) => setEditedTitle(e.target.value)}
-                         onKeyDown={handleKeyDown}
                     />
                     <button style={{margin: "5px", padding: "5px", borderRadius: "5px", cursor:"pointer", border: '1px solid #ccc'}} onClick={handleSaveEdit}>Save</button>
                     <button style={{margin: "5px", padding: "5px", borderRadius: "5px", cursor:"pointer", border: '1px solid #ccc'}} onClick={handleCancelEdit}>Cancel</button>
@@ -172,13 +140,13 @@ const Flow = ({ flow }) => {
               )}
             </div>
         </div>
-          <DragDropContext onDragEnd={handleOnDragEnd}>
-          <Droppable droppableId={String(flow.id)}>
+            <Droppable droppableId={String(flow.id)}  >
               {(provided) => (
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                   style={{ minHeight: '50px', padding: '10px' }}
+                 
                 >
                    {loading ? (
                       <div>Loading...</div>
@@ -186,6 +154,7 @@ const Flow = ({ flow }) => {
                         <div>Error: {error}</div>
                       ) : (
                          [...tasks]
+                           .sort((a,b) => a.order - b.order)
                           .filter((task) => task.flowNodeId === flow.id)
                             .map((task, index) => (
                                 <Task key={task.id} task={task} index={index} />
@@ -195,7 +164,6 @@ const Flow = ({ flow }) => {
                 </div>
               )}
             </Droppable>
-             </DragDropContext>
            {isCreateTaskMode ? (
                  <div>
                     <input
