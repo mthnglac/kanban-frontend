@@ -129,6 +129,7 @@ const Flow = ({ flow }) => {
                     borderRadius: "5px",
                     border: "1px solid #ccc",
                   }}
+                  required
                   type="text"
                   value={editedTitle}
                   onChange={(e) => setEditedTitle(e.target.value)}
@@ -142,6 +143,7 @@ const Flow = ({ flow }) => {
                     border: "1px solid #ccc",
                   }}
                   onClick={handleSaveEdit}
+                  disabled={!editedTitle}
                 >
                   Save
                 </button>
@@ -233,6 +235,7 @@ const Flow = ({ flow }) => {
                   borderRadius: "5px",
                   border: "1px solid #ccc",
                 }}
+                required
                 type="text"
                 placeholder="Task Title"
                 value={newTaskTitle}
@@ -245,6 +248,7 @@ const Flow = ({ flow }) => {
                   borderRadius: "5px",
                   border: "1px solid #ccc",
                 }}
+                required
                 type="text"
                 placeholder="Task Description"
                 value={newTaskDescription}
@@ -259,6 +263,7 @@ const Flow = ({ flow }) => {
                   border: "1px solid #ccc",
                 }}
                 onClick={handleCreateTask}
+                disabled={!newTaskTitle && !newTaskDescription}
               >
                 Create
               </button>

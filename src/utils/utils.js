@@ -1,1 +1,1 @@
-export const BACKEND_BASE_URL = "http://localhost:8000";
+export const BACKEND_BASE_URL = "https://kanban-backend-32f2325ca909.herokuapp.com";

@@ -113,16 +113,15 @@ const Task = ({ task, index }) => {
             {isEditMode ? (
               <div style={{ flex: 1 }}>
                 <input
+                  required
                   type="text"
                   value={editedTitle}
                   onChange={(e) => setEditedTitle(e.target.value)}
                 />
-                <input
-                  type="number"
-                  value={editedOrder}
-                  onChange={(e) => setEditedOrder(e.target.value)}
-                />
-                <button onClick={handleSaveEdit}>Save</button>
+                <button
+                  onClick={handleSaveEdit}
+                  disabled={!editedTitle}
+                >Save</button>
                 <button onClick={handleCancelEdit}>Cancel</button>
               </div>
             ) : (
