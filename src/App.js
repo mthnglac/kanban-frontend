@@ -1,12 +1,12 @@
-import React from 'react';
-import {Provider} from "react-redux";
+import React from "react";
+import { Provider } from "react-redux";
 import store from "./store";
 import Board from "./components/Board";
 
 const App = () => {
   return (
-     <Provider store={store}>
-        <Board />
+    <Provider store={store}>
+      <Board />
     </Provider>
   );
 };

@@ -32,9 +32,9 @@ const Task = ({ task, index }) => {
   };
 
   const handleCancelEdit = () => {
-    setIsEditMode(false);
     setEditedTitle(task.title);
     setEditedOrder(task.order);
+    setIsEditMode(false);
   };
 
   const handleSaveEdit = async () => {
@@ -107,7 +107,7 @@ const Task = ({ task, index }) => {
             style={{
               display: "flex",
               justifyContent: "space-between",
-              alignItems: "center",
+              alignItems: "flex-start",
             }}
           >
             {isEditMode ? (
@@ -126,8 +126,60 @@ const Task = ({ task, index }) => {
                 <button onClick={handleCancelEdit}>Cancel</button>
               </div>
             ) : (
-              <div style={{ flex: 1 }} onClick={handleEditTask}>
-                <h4 style={{ margin: "0" }}>{task.title}</h4>
+              <div style={{ flex: 1 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <h4 style={{ margin: "0" }}>{task.title}</h4>
+                  <div style={{ position: "relative" }} ref={menuRef}>
+                    <button
+                      style={{ cursor: "pointer" }}
+                      onClick={handleOpenMenu}
+                    >
+                      ...
+                    </button>
+                    {isMenuOpen && (
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "100%",
+                          right: 0,
+                          border: "1px solid #ccc",
+                          backgroundColor: "white",
+                          padding: "5px",
+                        }}
+                      >
+                        <button
+                          onClick={handleEditTask}
+                          style={{
+                            display: "block",
+                            width: "100%",
+                            textAlign: "left",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={handleDeleteTask}
+                          style={{
+                            display: "block",
+                            width: "100%",
+                            textAlign: "left",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 <div
                   style={{
                     backgroundColor: "#f0f0f0",
@@ -137,6 +189,7 @@ const Task = ({ task, index }) => {
                 >
                   <div
                     style={{
+                      marginTop: "10px",
                       backgroundColor: "#4caf50",
                       height: "100%",
                       width: `${task.progress}%`,
@@ -144,55 +197,18 @@ const Task = ({ task, index }) => {
                     }}
                   />
                 </div>
-                <p
+                <div
                   style={{
-                    margin: "0",
+                    marginTop: "10px",
                     fontStyle: "italic",
                     fontSize: "0.8rem",
-                    textAlign: "right",
+                    textAlign: "left",
                   }}
                 >
                   {calculateTimeAgo(task.createdAt)}
-                </p>
+                </div>
               </div>
             )}
-
-            <div style={{ position: "relative" }} ref={menuRef}>
-              <button onClick={handleOpenMenu}>...</button>
-              {isMenuOpen && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "100%",
-                    right: 0,
-                    border: "1px solid #ccc",
-                    backgroundColor: "white",
-                    padding: "5px",
-                  }}
-                >
-                  <button
-                    style={{
-                      display: "block",
-                      width: "100%",
-                      textAlign: "left",
-                    }}
-                    onClick={handleEditTask}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={handleDeleteTask}
-                    style={{
-                      display: "block",
-                      width: "100%",
-                      textAlign: "left",
-                    }}
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       )}

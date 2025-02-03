@@ -20,10 +20,10 @@ export const fetchBoard = createAsyncThunk(
 const boardSlice = createSlice({
   name: "board",
   initialState: {
-      board: null,
-      loading: false,
-      error: null,
-      boardId: 1
+    board: null,
+    loading: false,
+    error: null,
+    boardId: 1,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -39,7 +39,7 @@ const boardSlice = createSlice({
       .addCase(fetchBoard.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      })
+      });
   },
 });
 

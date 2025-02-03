@@ -10,7 +10,7 @@ export const fetchTasks = createAsyncThunk(
         return rejectWithValue("Failed to fetch tasks");
       }
       const data = await response.json();
-      const sortedData = [...data].sort((a,b) => a.order- b.order)
+      const sortedData = [...data].sort((a, b) => a.order - b.order);
       return sortedData;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -36,11 +36,10 @@ export const createTask = createAsyncThunk(
       const data = await response.json();
       return data;
     } catch (error) {
-        return rejectWithValue(error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
-
 
 export const deleteTask = createAsyncThunk(
   "task/deleteTask",
@@ -61,26 +60,29 @@ export const deleteTask = createAsyncThunk(
 
 // Async thunk for updating a task
 export const updateTask = createAsyncThunk(
-    "task/updateTask",
-    async ({ id, title, description, order, flowNodeId }, { rejectWithValue }) => {
-      try {
-        const response = await fetch(`${BACKEND_BASE_URL}/task/${id}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ title, description, order, flowNodeId }),
-        });
-        if (!response.ok) {
-          return rejectWithValue("Failed to update task");
-        }
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        return rejectWithValue(error.message);
+  "task/updateTask",
+  async (
+    { id, title, description, order, flowNodeId },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await fetch(`${BACKEND_BASE_URL}/task/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, description, order, flowNodeId }),
+      });
+      if (!response.ok) {
+        return rejectWithValue("Failed to update task");
       }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
     }
-  );
+  }
+);
 
 const taskSlice = createSlice({
   name: "task",
@@ -89,8 +91,7 @@ const taskSlice = createSlice({
     loading: false,
     error: null,
   },
-   reducers: {
-   },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchTasks.pending, (state) => {
@@ -122,27 +123,27 @@ const taskSlice = createSlice({
         state.error = null;
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
-          state.loading = false;
-          state.tasks = state.tasks.filter(task => task.id !== action.payload);
+        state.loading = false;
+        state.tasks = state.tasks.filter((task) => task.id !== action.payload);
       })
       .addCase(deleteTask.rejected, (state, action) => {
-          state.loading = false;
-          state.error = action.payload;
+        state.loading = false;
+        state.error = action.payload;
       })
       .addCase(updateTask.pending, (state) => {
         state.loading = true;
         state.error = null;
-    })
-    .addCase(updateTask.fulfilled, (state, action) => {
+      })
+      .addCase(updateTask.fulfilled, (state, action) => {
         state.loading = false;
-        state.tasks = state.tasks.map(task =>
-            task.id === action.payload.id ? action.payload : task
-          );
-    })
-    .addCase(updateTask.rejected, (state, action) => {
+        state.tasks = state.tasks.map((task) =>
+          task.id === action.payload.id ? action.payload : task
+        );
+      })
+      .addCase(updateTask.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      })
+      });
   },
 });
 
